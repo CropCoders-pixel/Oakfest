@@ -48,16 +48,7 @@ class Order(models.Model):
         # Calculate points earned (1 point per 10 rupees spent)
         self.points_earned = int(self.total_amount / 10)
         self.save()
-
-    class Meta:
-        ordering = ['-created_at']
-        indexes = [
-            models.Index(fields=['-created_at']),
-            models.Index(fields=['user']),
-            models.Index(fields=['status']),
-            models.Index(fields=['payment_status']),
-        ]
-
+    
     def apply_points(self, points):
         if self.user.deduct_reward_points(points):
             # Convert points to rupees (1 point = 1 rupee)

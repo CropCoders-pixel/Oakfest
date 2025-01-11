@@ -8,7 +8,8 @@ python-dotenv
 razorpay
 twilio
 firebase-admin
-Pillow
+qrcode==7.4.2
+pillow==10.0.0
 channels
 channels-redis
 redis

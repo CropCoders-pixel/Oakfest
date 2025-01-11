@@ -1,4 +1,3 @@
-// Service Worker for Push Notifications and Offline Support
 const CACHE_NAME = 'farm-to-table-v1';
 const STATIC_CACHE_URLS = [
     '/',
@@ -14,7 +13,6 @@ const STATIC_CACHE_URLS = [
     '/images/favicon.ico'
 ];
 
-// Install event - cache static assets
 self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME)
@@ -23,7 +21,6 @@ self.addEventListener('install', event => {
     );
 });
 
-// Activate event - clean up old caches
 self.addEventListener('activate', event => {
     event.waitUntil(
         caches.keys()
@@ -38,9 +35,7 @@ self.addEventListener('activate', event => {
     );
 });
 
-// Fetch event - serve from cache, fallback to network
 self.addEventListener('fetch', event => {
-    // Skip for API calls
     if (event.request.url.includes('/api/')) {
         return;
     }
@@ -54,8 +49,7 @@ self.addEventListener('fetch', event => {
 
                 return fetch(event.request)
                     .then(response => {
-                        // Cache only successful responses
-                        if (!response || response.status !== 200 || response.type !== 'basic') {
+                        if (!response || response.status !== 200) {
                             return response;
                         }
 
@@ -71,7 +65,6 @@ self.addEventListener('fetch', event => {
     );
 });
 
-// Push event - handle push notifications
 self.addEventListener('push', event => {
     if (!event.data) return;
 
@@ -91,31 +84,22 @@ self.addEventListener('push', event => {
     );
 });
 
-// Notification click event - handle notification clicks
 self.addEventListener('notificationclick', event => {
     event.notification.close();
 
     event.waitUntil(
         clients.matchAll({ type: 'window' })
-            .then(clientList => {
-                const url = event.notification.data.url;
-                
-                // If a window is already open, focus it
-                for (const client of clientList) {
-                    if (client.url === url && 'focus' in client) {
-                        return client.focus();
-                    }
+            .then(windowClients => {
+                if (windowClients.length > 0) {
+                    windowClients[0].focus();
+                    return;
                 }
-                
-                // If no window is open, open a new one
-                if (clients.openWindow) {
-                    return clients.openWindow(url);
-                }
+
+                clients.openWindow('/');
             })
     );
 });
 
-// Background sync event - handle offline actions
 self.addEventListener('sync', event => {
     if (event.tag === 'sync-orders') {
         event.waitUntil(syncOrders());
@@ -124,12 +108,11 @@ self.addEventListener('sync', event => {
     }
 });
 
-// Sync orders that were made offline
 async function syncOrders() {
     try {
         const db = await openDB();
         const orders = await db.getAll('offline-orders');
-        
+
         for (const order of orders) {
             try {
                 const response = await fetch('/api/orders/', {
@@ -140,7 +123,7 @@ async function syncOrders() {
                     },
                     body: JSON.stringify(order.data)
                 });
-                
+
                 if (response.ok) {
                     await db.delete('offline-orders', order.id);
                 }
@@ -153,12 +136,11 @@ async function syncOrders() {
     }
 }
 
-// Sync waste reports that were made offline
 async function syncWasteReports() {
     try {
         const db = await openDB();
         const reports = await db.getAll('offline-waste-reports');
-        
+
         for (const report of reports) {
             try {
                 const response = await fetch('/api/waste/', {
@@ -169,7 +151,7 @@ async function syncWasteReports() {
                     },
                     body: JSON.stringify(report.data)
                 });
-                
+
                 if (response.ok) {
                     await db.delete('offline-waste-reports', report.id);
                 }
@@ -182,18 +164,16 @@ async function syncWasteReports() {
     }
 }
 
-// IndexedDB helper function
 function openDB() {
     return new Promise((resolve, reject) => {
         const request = indexedDB.open('farm-to-table', 1);
-        
+
         request.onerror = () => reject(request.error);
         request.onsuccess = () => resolve(request.result);
-        
+
         request.onupgradeneeded = event => {
             const db = event.target.result;
-            
-            // Create stores for offline data
+
             if (!db.objectStoreNames.contains('offline-orders')) {
                 db.createObjectStore('offline-orders', { keyPath: 'id' });
             }

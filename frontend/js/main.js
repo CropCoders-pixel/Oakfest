@@ -1,26 +1,20 @@
-// Main application initialization
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize UI
     ui.navigateTo('home');
     ui.updateAuthUI();
 
-    // Setup auth state listener
     auth.addAuthStateListener((isAuthenticated, user) => {
         ui.updateAuthUI();
     });
 
-    // Initialize notifications if supported
     if ('serviceWorker' in navigator && config.FEATURES.ENABLE_NOTIFICATIONS) {
         initializeNotifications();
     }
 
-    // Initialize offline support if enabled
     if (config.FEATURES.ENABLE_OFFLINE_MODE) {
         initializeOfflineSupport();
     }
 });
 
-// Initialize push notifications
 async function initializeNotifications() {
     try {
         const registration = await navigator.serviceWorker.register('/service-worker.js');
@@ -35,7 +29,6 @@ async function initializeNotifications() {
     }
 }
 
-// Initialize offline support
 async function initializeOfflineSupport() {
     try {
         const registration = await navigator.serviceWorker.register('/service-worker.js');
@@ -45,12 +38,10 @@ async function initializeOfflineSupport() {
     }
 }
 
-// Handle payment success
 window.onPaymentSuccess = (response) => {
     api.verifyPayment(response)
         .then(() => {
             ui.showSuccess('Payment successful!');
-            // Additional success handling
         })
         .catch(error => {
             ui.showError('Payment verification failed');
@@ -58,13 +49,11 @@ window.onPaymentSuccess = (response) => {
         });
 };
 
-// Handle payment failure
 window.onPaymentError = (error) => {
     ui.showError('Payment failed. Please try again.');
     console.error('Payment error:', error);
 };
 
-// Initialize Razorpay
 function initializeRazorpay(orderData) {
     const options = {
         key: config.PAYMENT.RAZORPAY_KEY,
@@ -93,5 +82,4 @@ function initializeRazorpay(orderData) {
     return rzp;
 }
 
-// Export global functions
 window.initializeRazorpay = initializeRazorpay;

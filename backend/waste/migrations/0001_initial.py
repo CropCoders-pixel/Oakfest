@@ -52,12 +52,9 @@ class Migration(migrations.Migration):
                     models.CharField(
                         choices=[
                             ("organic", "Organic Waste"),
-                            ("cardboard", "Cardboard"),
-                            ("glass", "Glass"),
-                            ("metal", "Metal"),
-                            ("paper", "Paper"),
-                            ("plastic", "Plastic"),
-                            ("trash", "Trash"),
+                            ("packaging", "Packaging Waste"),
+                            ("food", "Food Waste"),
+                            ("other", "Other"),
                         ],
                         max_length=10,
                     ),

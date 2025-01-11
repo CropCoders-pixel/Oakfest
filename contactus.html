@@ -96,20 +96,20 @@
     </div>
 
     <script>
-        // Function to generate email links for Gmail or Outlook
+        
         function sendEmail(service) {
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const subject = document.getElementById('subject').value;
             const message = document.getElementById('message').value;
 
-            // Encode the email content
+            
             const encodedSubject = encodeURIComponent(subject);
             const encodedBody = encodeURIComponent(
                 `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
             );
 
-            // Generate the URL for Gmail or Outlook
+            
             let url = '';
             if (service === 'gmail') {
                 url = `https://mail.google.com/mail/?view=cm&fs=1&to=cropcodersoakfest@gmail.com
@@ -119,11 +119,11 @@
 &subject=${encodedSubject}&body=${encodedBody}`;
             }
 
-            // Open the URL in a new tab
+            
             window.open(url, '_blank');
         }
 
-        // Event listeners for Gmail and Outlook buttons
+        
         document.getElementById('sendGmail').addEventListener('click', () => {
             sendEmail('gmail');
         });

@@ -1,15 +1,12 @@
-// API Service for handling all API calls
 class ApiService {
     constructor() {
         this.baseUrl = config.API_BASE_URL;
     }
 
-    // Helper method to get auth token
     getAuthToken() {
         return localStorage.getItem(config.STORAGE_KEYS.AUTH_TOKEN);
     }
 
-    // Helper method to build headers
     getHeaders() {
         const headers = {
             'Content-Type': 'application/json',
@@ -21,7 +18,6 @@ class ApiService {
         return headers;
     }
 
-    // Generic request method
     async request(endpoint, options = {}) {
         try {
             const url = this.baseUrl + endpoint;
@@ -47,7 +43,6 @@ class ApiService {
         }
     }
 
-    // Authentication methods
     async login(email, password) {
         const response = await this.request(config.AUTH.LOGIN, {
             method: 'POST',
@@ -100,7 +95,6 @@ class ApiService {
         return response;
     }
 
-    // Product methods
     async getProducts(filters = {}) {
         const queryParams = new URLSearchParams(filters).toString();
         return await this.request(`${config.PRODUCTS.LIST}?${queryParams}`);
@@ -114,7 +108,6 @@ class ApiService {
         return await this.request(`${config.PRODUCTS.SEARCH}?q=${query}`);
     }
 
-    // Farmer specific API endpoints
     async getFarmerProducts() {
         const response = await this.request('/api/products/my-products/');
         return response;
@@ -142,7 +135,6 @@ class ApiService {
         });
     }
 
-    // Waste management methods
     async reportWaste(wasteData) {
         return await this.request(config.WASTE.REPORT, {
             method: 'POST',
@@ -154,11 +146,14 @@ class ApiService {
         return await this.request(config.WASTE.STATS);
     }
 
-    // Payment methods
     async createPayment(orderData) {
         return await this.request(config.PAYMENT.CREATE, {
             method: 'POST',
-            body: JSON.stringify(orderData),
+            body: JSON.stringify({
+                amount: orderData.amount,
+                payment_method: orderData.payment_method || 'razorpay',
+                farmer_phone: orderData.farmer_phone
+            })
         });
     }
 
@@ -169,7 +164,6 @@ class ApiService {
         });
     }
 
-    // Notification methods
     async subscribeToNotifications(subscription) {
         return await this.request(config.NOTIFICATIONS.SUBSCRIBE, {
             method: 'POST',
@@ -178,5 +172,4 @@ class ApiService {
     }
 }
 
-// Create a singleton instance
 const api = new ApiService();

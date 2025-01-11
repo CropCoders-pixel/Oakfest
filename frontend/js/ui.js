@@ -1,8 +1,14 @@
-// UI Service for handling UI components and interactions
+<<<<<<< HEAD
+<<<<<<< HEAD
 import { ApiService } from './api.js';
 const api = new ApiService();
 
-
+=======
+// UI Service for handling UI components and interactions
+>>>>>>> parent of 684d3e5 (Commit 9)
+=======
+// UI Service for handling UI components and interactions
+>>>>>>> parent of 684d3e5 (Commit 9)
 class UiService {
     constructor() {
         this.currentPage = 'home';
@@ -13,7 +19,6 @@ class UiService {
         this.setupEventListeners();
     }
 
-    // Initialize page templates
     initializeTemplates() {
         ['home', 'products', 'waste'].forEach(page => {
             const template = document.getElementById(`${page}-template`);
@@ -23,20 +28,16 @@ class UiService {
         });
     }
 
-    // Initialize modal components
     initializeModals() {
-        // Get modal elements
         this.modals.login = document.getElementById('loginModal');
         this.modals.register = document.getElementById('registerModal');
 
-        // Add close button handlers
         document.querySelectorAll('.modal .close').forEach(closeBtn => {
             closeBtn.addEventListener('click', () => {
                 this.closeAllModals();
             });
         });
 
-        // Close modal when clicking outside
         window.addEventListener('click', (event) => {
             if (event.target.classList.contains('modal')) {
                 this.closeAllModals();
@@ -44,9 +45,7 @@ class UiService {
         });
     }
 
-    // Setup event listeners
     setupEventListeners() {
-        // Navigation links
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -55,16 +54,13 @@ class UiService {
             });
         });
 
-        // Auth buttons
         document.getElementById('loginBtn').addEventListener('click', () => this.showModal('login'));
         document.getElementById('registerBtn').addEventListener('click', () => this.showModal('register'));
 
-        // Form submissions
         document.getElementById('loginForm').addEventListener('submit', this.handleLogin.bind(this));
         document.getElementById('registerForm').addEventListener('submit', this.handleRegister.bind(this));
     }
 
-    // Navigation
     navigateTo(page) {
         this.currentPage = page;
         const mainContent = document.getElementById('mainContent');
@@ -75,13 +71,11 @@ class UiService {
             this.initializePageSpecificFeatures(page);
         }
 
-        // Update active nav link
         document.querySelectorAll('.nav-link').forEach(link => {
             link.classList.toggle('active', link.dataset.page === page);
         });
     }
 
-    // Initialize page-specific features
     initializePageSpecificFeatures(page) {
         switch (page) {
             case 'products':
@@ -93,7 +87,6 @@ class UiService {
         }
     }
 
-    // Products page initialization
     async initializeProductsPage() {
         const productsGrid = document.getElementById('productsGrid');
         if (!productsGrid) return;
@@ -102,17 +95,14 @@ class UiService {
             const products = await api.getProducts();
             this.renderProducts(products);
 
-            // Initialize filters
             document.getElementById('categoryFilter').addEventListener('change', this.handleProductFilter.bind(this));
             document.getElementById('priceRange').addEventListener('input', this.handleProductFilter.bind(this));
             document.getElementById('sortBy').addEventListener('change', this.handleProductFilter.bind(this));
         } catch (error) {
-            console.error('Error loading products:', error);
             this.showError('Failed to load products');
         }
     }
 
-    // Waste management page initialization
     initializeWastePage() {
         const wasteForm = document.getElementById('wasteForm');
         if (!wasteForm) return;
@@ -135,7 +125,6 @@ class UiService {
         this.updateWasteStats();
     }
 
-    // Modal handling
     showModal(modalName) {
         this.closeAllModals();
         if (this.modals[modalName]) {
@@ -149,7 +138,6 @@ class UiService {
         });
     }
 
-    // Form handling
     async handleLogin(e) {
         e.preventDefault();
         const email = document.getElementById('loginEmail').value;
@@ -168,26 +156,22 @@ class UiService {
     async handleRegister(e) {
         e.preventDefault();
         
-        // Get form values
         const name = document.getElementById('registerName').value;
         const email = document.getElementById('registerEmail').value;
         const password = document.getElementById('registerPassword').value;
         const userType = document.getElementById('userType').value;
         
-        // Validate form
         if (!name || !email || !password || !userType) {
             this.showError('Please fill in all fields');
             return;
         }
         
-        // Validate email format
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             this.showError('Please enter a valid email address');
             return;
         }
         
-        // Validate password strength
         if (password.length < 8) {
             this.showError('Password must be at least 8 characters long');
             return;
@@ -205,10 +189,8 @@ class UiService {
             this.closeAllModals();
             this.showSuccess('Registration successful! Please login.');
             
-            // Clear form
             document.getElementById('registerForm').reset();
             
-            // Show login modal after a brief delay
             setTimeout(() => {
                 this.showModal('login');
             }, 1500);
@@ -218,13 +200,11 @@ class UiService {
         }
     }
 
-    // Toggle farmer-specific fields
     toggleFarmerFields(userType) {
         const farmerFields = document.getElementById('farmerFields');
         if (farmerFields) {
             farmerFields.style.display = userType === 'farmer' ? 'block' : 'none';
             
-            // Make farmer fields required only when farmer type is selected
             const farmerInputs = farmerFields.querySelectorAll('input, select');
             farmerInputs.forEach(input => {
                 input.required = userType === 'farmer';
@@ -232,7 +212,6 @@ class UiService {
         }
     }
 
-    // UI Updates
     updateAuthUI() {
         const isAuthenticated = auth.isUserAuthenticated();
         const user = auth.getCurrentUser();
@@ -250,7 +229,6 @@ class UiService {
         }
     }
 
-    // Notifications
     showSuccess(message) {
         this.showNotification(message, 'success');
     }
@@ -260,21 +238,17 @@ class UiService {
     }
 
     showNotification(message, type = 'info') {
-        // Create notification element
         const notification = document.createElement('div');
         notification.className = `notification ${type}`;
         notification.textContent = message;
 
-        // Add to document
         document.body.appendChild(notification);
 
-        // Remove after delay
         setTimeout(() => {
             notification.remove();
         }, 3000);
     }
 
-    // Product rendering
     renderProducts(products) {
         const productsGrid = document.getElementById('productsGrid');
         if (!productsGrid) return;
@@ -292,18 +266,15 @@ class UiService {
         `).join('');
     }
 
-    // Cart handling
     addToCart(productId) {
         if (!auth.isUserAuthenticated()) {
             this.showModal('login');
             return;
         }
 
-        // Add to cart logic here
         this.showSuccess('Product added to cart!');
     }
 
-    // Waste statistics update
     async updateWasteStats() {
         try {
             const stats = await api.getWasteStats();
@@ -317,9 +288,61 @@ class UiService {
             console.error('Failed to update waste stats:', error);
         }
     }
+
+    async handlePayment(amount, farmerPhone) {
+        try {
+            const paymentMethod = document.querySelector('input[name="payment_method"]:checked')?.value || 'razorpay';
+            const response = await api.createPayment({
+                amount: amount,
+                payment_method: paymentMethod,
+                farmer_phone: farmerPhone
+            });
+
+            if (response.payment_method === 'phonepe') {
+                this.showQRCode(response.qr_data);
+            } else {
+                initializeRazorpay({
+                    order_id: response.order_id,
+                    amount: response.amount,
+                    currency: response.currency
+                });
+            }
+        } catch (error) {
+            this.showError('Failed to initialize payment');
+            console.error(error);
+        }
+    }
+
+    showQRCode(qrData) {
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.style.display = 'block';
+        
+        modal.innerHTML = `
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Scan QR Code to Pay</h2>
+                <img src="data:image/png;base64,${qrData.qr_code}" alt="Payment QR Code">
+                <p>Or click below to open PhonePe</p>
+                <a href="${qrData.upi_url}" class="btn btn-primary">Open PhonePe</a>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+
+        const closeBtn = modal.querySelector('.close');
+        closeBtn.onclick = () => {
+            modal.remove();
+        };
+
+        window.onclick = (event) => {
+            if (event.target === modal) {
+                modal.remove();
+            }
+        };
+    }
 }
 
-// Farmer Dashboard UI
 class FarmerDashboard {
     constructor() {
         this.productsContainer = document.getElementById('farmer-products');
@@ -429,7 +452,6 @@ class FarmerDashboard {
     }
 }
 
-// Create a singleton instance
 const ui = new UiService();
 const farmerDashboard = new FarmerDashboard();
 farmerDashboard.initialize();

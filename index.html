@@ -1,10 +1,213 @@
 <!DOCTYPE html>
-
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>CropCoders</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title> CropCoders </title>
     <link rel="stylesheet" href="style.css" />
+    <style>
+      
+      @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Open Sans", sans-serif;
+      }
+
+      body {
+        height: 100vh;
+        width: 100%;
+        background-image: url('https://static.vecteezy.com/system/resources/thumbnails/050/680/099/small_2x/lush-green-leaves-covering-the-ground-in-a-forest-setting-during-daytime-with-sunlight-illuminating-their-textures-photo.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+      }
+
+      .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+      }
+
+      .navbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 120000px;
+        margin: 0 auto;
+        padding: 20px 15px;
+        background-color: #126442af;
+      }
+
+      .navbar .logo a {
+        font-size: 1.8rem;
+        text-decoration: none;
+        color: #fff;
+      }
+
+      .navbar .links {
+        display: flex;
+        align-items: center;
+        list-style: none;
+        gap: 35px;
+      }
+
+      .navbar .links a {
+        font-weight: 900;
+        text-decoration: none;
+        color: #fff;
+        padding: 10px 0;
+        transition: 0.2s ease;
+        font-size: 18px;
+      }
+
+      .navbar .links a:hover {
+        color: #47b2e4;
+      }
+
+      .navbar .buttons a {
+        text-decoration: none;
+        color: #fff;
+        font-size: 1rem;
+        padding: 15px 0;
+        transition: 0.2s ease;
+      }
+
+      
+
+      .navbar .buttons .signin:hover {
+        color: #47b2e4;
+      }
+
+      .navbar .buttons .signup {
+        border: 1px solid #fff;
+        padding: 10px 20px;
+        border-radius: 0.375rem;
+        text-align: center;
+        transition: 0.2s ease;
+      }
+
+      .navbar .buttons .signup:hover {
+        background-color: #47b2e4;
+        color: #fff;
+      }
+
+      .hero-section {
+        display: flex;
+        background-color: rgba(0, 0, 0, 0.466);
+        justify-content: space-evenly;
+        align-items: center;
+        height: 95vh;
+        padding: 0 15px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .hero-section .hero {
+        max-width: 50%;
+        color: #fff;
+      }
+
+      .hero h2 {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+      }
+
+      .hero p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+      .hero-section .img img {
+        width: 517px;
+      }
+
+      .hero-section .buttons {
+        margin-top: 40px;
+      }
+
+      .hero-section .buttons a {
+        text-decoration: none;
+        color: #fff;
+        padding: 12px 24px;
+        border-radius: 0.375rem;
+        font-weight: 600;
+        transition: 0.2s ease;
+        display: inline-block;
+      }
+
+      .hero-section .buttons a:not(:last-child) {
+        margin-right: 15px;
+      }
+
+      .buttons .join {
+        background-color: #176403b4;
+      }
+
+      .hero-section .buttons .learn {
+        border: 1px solid #fff;
+        border-radius: 0.375rem;
+      }
+
+      .hero-section .buttons a:hover {
+        background-color:   #176403b4;
+      }
+
+      
+      @media screen and (max-width: 1023px) {
+        .navbar .logo a {
+          font-size: 1.5rem;
+        }
+
+        .links {
+          position: fixed;
+          left: -100%;
+          top: 75px;
+          width: 100%;
+          height: 100vh;
+          padding-top: 50px;
+          background: #175d69;
+          flex-direction: column;
+          transition: 0.3s ease;
+        }
+
+        .navbar #menu-toggle:checked ~ .links {
+          left: 0;
+        }
+
+        .navbar #hamburger-btn {
+          display: block;
+        }
+
+        .header .buttons {
+          display: none;
+        }
+
+        .hero-section .hero {
+          max-width: 100%;
+          text-align: center;
+        }
+
+        .hero-section img {
+          display: none;
+        }
+      }
+
+      
+      .bubble {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #03b44dbd;
+        color: white;
+        border-radius: 25px;
+        font-family: "Arial", sans-serif;
+        text-align: center;
+        border: 2px solid #ffffff00;
+      }
+    </style>
   </head>
   <body>
     <header class="header">
@@ -12,41 +215,389 @@
         <h2 class="logo"><a href="#">CropCoders</a></h2>
         </label>
         <ul class="links">
-          <li><a href="#">Home</a></li>
-          <li><a href="#">About Us</a></li>
-          <li><a href="#">Products</a></li>
-          <li><a href="#">waste Management</a></li>
-          <li><a href="contactus.html">Contact Us</a></li>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#aboutus">About Us</a></li>
+          <li><a href="#">Services</a></li>
+          <li><a href="#">Crop Price List</a></li>
+          <li><a href="contactus.html ">Contact Us</a></li>
         </ul>
       </nav>
     </header>
     <br>
     <br>
     <br>
-    <section class="hero-section">
-      <div class="hero">
-        <h2>🚨 Big Announcement! 🚨</h2>
-        <p>
-            We’re thrilled to launch FarmCycle – where organic goodness meets eco-friendly living!
 
-            <br>💚 Fresh, Chemical-Free Produce: Direct from our farmers to your table.<br>
-            ♻️ Waste-to-Rewards Program: Earn points by depositing waste and redeem them for organic products.
-            <br>Join us in creating a sustainable future!
-            <br>Let’s turn waste into wealth and choose healthier, cleaner food for everyone.
-        </p>
-        <div class="buttons">
-          <a href="#" class="join">Download iOS</a>
-          <br>
-          <br>
-          <a href="#" class="join">Download Android</a>
-          <br>
-          <br>
-          <a href="#" class="join">Download Windows</a>
+    <br>
+
+
+
+    <section class="hero-section"id="home">
+      <div class="hero">
+        <h2>🚨 Introducing New FarmCycle Marketplace 🚨</h2>
+        <br>
+
+
+        <p class="bubble">We’re thrilled to launch FarmCycle – where organic goodness meets eco-friendly living!
+          <br>💚 Fresh, Chemical-Free Produce: Direct from our farmers to your table.
+          <br>♻️ Waste-to-Rewards Program: Earn points by depositing waste and redeem them for organic products.
+          <br>Join us in creating a sustainable future!
+          <br>Let’s turn waste into wealth and choose healthier, cleaner food for everyone.</p>
+        <div class="buttons" id="services">
+          <a href="#" class="join">Download Android</a><br><br>
+          <a href="#" class="join">Download iOS</a><br><br>
+          <a href="#" class="join">Download Windows</a><br><br>
         </div>
       </div>
       <div class="img">
-        <img src="pngtree-hand-painted-noble-watercolor-flower-png-transparent-material-png-image_4387375-removebg-preview (1).png" alt="hero image" />
+        <img src="pngtree-hand-painted-noble-watercolor-flower-png-transparent-material-png-image_4387375-removebg-preview.png" alt="hero image" />
       </div>
     </section>
   </body>
+  <!DOCTYPE html>
+<html lang="en">
+    
+    <style>
+      
+      @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Open Sans", sans-serif;
+      }
+
+      body {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        background-image: url('https://static.vecteezy.com/system/resources/thumbnails/050/680/099/small_2x/lush-green-leaves-covering-the-ground-in-a-forest-setting-during-daytime-with-sunlight-illuminating-their-textures-photo.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+      }
+
+      
+      
+      .hero-section {
+        display: flex;
+        align-items: center;
+        height: 111vh;
+        padding: 0 15px;
+        text-align: left;
+        color: #fff;
+        margin-top: 80px;
+      }
+
+      .hero-section .hero {
+        max-width: 100%;
+      }
+
+      .hero h2 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+      }
+
+      .hero p {
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+        color: #fff;
+      }
+
+      .hero-section .img img {
+        width: 400px;
+        border-radius: 10px;
+      }
+
+    </style>
+  </head>
+  <body>
+    
+    <section class="hero-section"id="aboutus">
+      <div class="hero">
+        <h2>About Us</h2>
+        <p>Welcome to our Farm-to-Table Marketplace, where we are committed to creating a more sustainable, eco-friendly future by connecting farmers directly with consumers. By promoting organic farming, reducing food waste, and fostering a circular economy, we’re building a platform that ensures fair pricing for farmers, better quality food for consumers, and a cleaner planet for all.</p>
+        <br><br><h2>Our Vision</h2>
+        <p>At the core of our marketplace is a vision to eliminate the middlemen in the food supply chain, giving farmers a direct connection to their consumers. This helps ensure fair prices for both farmers and consumers while promoting the consumption of organic, sustainably grown produce. We aim to reduce food waste through optimized inventory management and real-time availability of products. Our goal is to foster an eco-conscious community by promoting local, sustainable produce that not only nourishes individuals but also the planet.</p>
+      </div>
+    </section>
+      <section class="hero-section">
+          <div class="hero">
+            <h2>Meet Our Team</h2> 
+            <p>Our platform is powered by a passionate team committed to transforming the food and sustainability industries. The team members behind our vision include: <br>Samant M Patil: With his deep expertise in technology and sustainable practices, Samant drives the development of innovative solutions that enable farmers and consumers to connect in meaningful ways. <br>Karthic Sundhar: Karthic brings extensive knowledge of organic farming practices to our platform. He ensures that the farmers on our marketplace adhere to sustainable and environmentally friendly farming methods. <br>Sanjit Sarva Sunil: A business strategist with a focus on sustainability, Sanjit plays a key role in scaling our platform and ensuring its growth while staying true to our eco-friendly values. <br>Karthik Bhat: Karthik is responsible for our platform’s business development and strategy, ensuring that we reach new customers and farmers, and continue to provide value to our community.</p>
+        
+      </div>
+      
+    </section>
+    <section class="hero-section">
+      <div class="hero">
+        <h2>What We Do
+        </h2>
+        <p>Organic Produce: We provide consumers with fresh, chemical-free produce, sourced directly from farms practicing sustainable farming methods. Our marketplace offers a wide range of organic food that is free from harmful chemicals like calcium carbide, commonly used in the ripening of fruits such as mangoes and bananas. We ensure that everything you buy is organic, healthy, and safe for consumption.
+    
+          Waste-to-Wealth: As part of our commitment to sustainability, we encourage consumers to deposit their biodegradable and non-biodegradable waste at our centers. Biodegradable waste is used to create compost and biogas, while non-biodegradable waste is repurposed into eco-friendly products like recycled plastic bottles. By doing so, we’re not only reducing waste but also turning it into a valuable resource that powers our marketplace. Consumers can also earn reward points for depositing waste, which can be used to purchase products on the app.
+          
+          Support for Small Businesses: We believe in promoting small-scale businesses that align with our sustainable and ethical values. Our platform features a variety of local artisans and eco-conscious entrepreneurs who produce handmade goods such as organic jaggery, eco-friendly clothes, and other sustainable products. This allows consumers to support small businesses while shopping for eco-friendly products.</p>
+    
+  </div>
+  
+</section>
+
+  </body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Working CropCoders</title>
+    <style>
+      
+      @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Open Sans", sans-serif;
+      }
+
+      body {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        background-image: url('https://static.vecteezy.com/system/resources/thumbnails/050/680/099/small_2x/lush-green-leaves-covering-the-ground-in-a-forest-setting-during-daytime-with-sunlight-illuminating-their-textures-photo.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+      }
+
+      
+      .navbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 15px;
+        background-color: #126442d8;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 100;
+      }
+
+      .navbar .logo a {
+        font-size: 1.8rem;
+        text-decoration: none;
+        color: #fff;
+      }
+
+      
+      .flowchart-container {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        flex-direction: column;
+        margin-top: 120px;
+      }
+
+      .flowchart-box {
+        text-align: center;
+        background-color: rgba(0, 2, 0, 0.555);
+        border-radius: 10px;
+        padding: 20px;
+        width: 80%;
+        margin: 30px 0;
+      }
+
+      .flowchart-box img {
+        max-width: 200px;
+        border-radius: 10px;
+        margin-top: 15px;
+      }
+
+      
+      .arrow {
+  width: 40px;
+  height: 40px;
+  background-color: #fff;
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  margin: 20px 0;
+  transform: rotate(180deg); 
+}
+
+
+      
+      h2 {
+        font-size: 2rem;
+        margin-bottom: 10px;
+        color: #fff;
+      }
+
+      
+      p {
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+        color: #fff;
+      }
+
+    </style>
+  </head>
+  <body>
+    
+    
+    <div class="flowchart-container">
+      
+      <div class="flowchart-box">
+        <h2>Step 1: Farmer</h2>
+        <p>The farmers grow the crops</p>
+        <img src="images.jpg" alt="Learn to Code" />
+      </div>
+
+      
+      <div class="arrow"></div>
+
+      
+      <div class="flowchart-box">
+        <h2>Step 2: To the company </h2>
+        <p>It comes to the company were we pack the crops</p>
+        <img src="1668061264269.jpg" alt="Build Projects" />
+      </div>
+
+      
+      <div class="arrow"></div>
+
+      
+      <div class="flowchart-box">
+        <h2>Step 3: send to the costumers</h2>
+        <p>Sending it to the costumers</p>
+        <img src="images-1.jpg" alt="Deploy & Share" />
+      </div>
+    </div>
+
+    <section class="hero-section"id="Services">
+      <div class="hero">
+        <h2>Steps for farmers
+        </h2>
+        <a href="https://chat.whatsapp.com/GIsEY7yqWDj0q8om8NyAe4">Click on this</a>
+        <p>step-1 Join the community<br>step-2 join the needed group farmers<br>step-3 Post the Product (price,name,type,location) </p>
+    
+  </div>
+  
+</section>
+  
+
+  </body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Company Footer</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Arial", sans-serif;
+      }
+
+      
+      .footer {
+        background-color: #126442d8;
+        color: #fff;
+        padding: 50px 0;
+        text-align: center;
+      }
+
+      .footer-container {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+      }
+
+      .footer-info,
+      .footer-social {
+        flex: 1;
+        min-width: 250px;
+        margin: 10px;
+      }
+
+      .footer-info h3,
+      .footer-social h3 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+      }
+
+      .footer-info ul,
+      .footer-social ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .footer-info li,
+      .footer-social li {
+        font-size: 1rem;
+        margin-bottom: 10px;
+      }
+
+      .footer-info li strong {
+        font-weight: bold;
+      }
+
+      .footer-social a {
+        text-decoration: none;
+        color: #fff;
+        transition: 0.3s;
+      }
+
+      .footer-social a:hover {
+        color: #47b2e4;
+      }
+
+      .footer-bottom {
+        background-color: #0f3b30;
+        padding: 15px;
+        margin-top: 10px;
+      }
+
+      .footer-bottom p {
+        margin: 0;
+        font-size: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-info">
+          <h3>Company Info</h3>
+          <ul>
+            <li><strong>Address:</strong> EsHSR</li>
+            <li><strong>Phone:</strong> +1 234 567 890</li>
+            <li><strong>Email:</strong> cropCoders@gmail.com</li>
+            <li><strong>Website:</strong> Example.com</li>
+          </ul>
+        </div>
+        <div class="footer-social">
+          <h3>Follow Us</h3>
+          <ul>
+            <li><a href="#">Facebook</a></li>
+            <li><a href="#">Twitter</a></li>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">LinkedIn</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 . All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
+</html>
+
 </html>

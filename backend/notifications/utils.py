@@ -8,10 +8,6 @@ from .models import Notification
 import asyncio
 
 def send_notification(user, type, title, message, link=''):
-    """
-    Send a notification to a user through multiple channels based on their preferences.
-    """
-    # Create notification record
     notification = Notification.objects.create(
         user=user,
         type=type,
@@ -20,24 +16,19 @@ def send_notification(user, type, title, message, link=''):
         link=link
     )
     
-    # Get user preferences
     preferences = user.notification_preferences.first()
     if not preferences:
         return notification
     
-    # Send email notification
     if preferences.email_notifications and user.email:
         send_email_notification(user.email, title, message)
     
-    # Send SMS notification
     if preferences.sms_notifications and user.phone:
         send_sms_notification(user.phone, message)
     
-    # Send push notification
     if preferences.push_notifications:
         send_user_push_notification(user, title, message)
     
-    # Send WebSocket notification
     asyncio.run(send_websocket_notification(user.id, {
         "title": title,
         "message": message,
@@ -47,11 +38,7 @@ def send_notification(user, type, title, message, link=''):
     return notification
 
 def send_email_notification(email, subject, message):
-    """
-    Send an email notification using Django's email backend.
-    """
     try:
-        # Load template with context
         html_message = render_to_string('notifications/email_template.html', {
             'title': subject,
             'message': message,
@@ -72,9 +59,6 @@ def send_email_notification(email, subject, message):
         return False
 
 def send_sms_notification(phone_number, message):
-    """
-    Send an SMS notification using Twilio.
-    """
     try:
         client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
         message = client.messages.create(
@@ -88,14 +72,10 @@ def send_sms_notification(phone_number, message):
         return False
 
 def send_user_push_notification(user, title, message):
-    """
-    Send push notifications to all user's subscribed devices using Firebase.
-    """
     if not user.fcm_token:
         return False
         
     try:
-        # Initialize Firebase Admin SDK if not already initialized
         if not firebase_admin._apps:
             cred = firebase_admin.credentials.Certificate(settings.FIREBASE_CREDENTIALS)
             firebase_admin.initialize_app(cred)
@@ -119,9 +99,6 @@ def send_user_push_notification(user, title, message):
         return False
 
 def send_push_notification(subscription, title, message):
-    """
-    Send a push notification to a specific subscription using Firebase.
-    """
     try:
         if not firebase_admin._apps:
             cred = firebase_admin.credentials.Certificate(settings.FIREBASE_CREDENTIALS)
@@ -142,9 +119,6 @@ def send_push_notification(subscription, title, message):
         return False
 
 async def send_websocket_notification(user_id, notification_data):
-    """
-    Send notification through WebSocket for real-time updates.
-    """
     from channels.layers import get_channel_layer
     from asgiref.sync import async_to_sync
     
@@ -160,9 +134,6 @@ async def send_websocket_notification(user_id, notification_data):
     )
 
 def send_bulk_notification(users, type, title, message, link=''):
-    """
-    Send notifications to multiple users at once.
-    """
     notifications = []
     for user in users:
         notification = send_notification(user, type, title, message, link)

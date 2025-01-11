@@ -1,9 +1,6 @@
-// Configuration settings for the application
 const config = {
-    // API endpoints
     API_BASE_URL: 'http://localhost:8000/api',
     
-    // Authentication endpoints
     AUTH: {
         LOGIN: '/users/login/',
         REGISTER: '/users/register/',
@@ -13,7 +10,6 @@ const config = {
         TOKEN: '/users/token/'
     },
     
-    // Product endpoints
     PRODUCTS: {
         LIST: '/products/',
         DETAIL: (id) => `/products/${id}/`,
@@ -26,7 +22,6 @@ const config = {
         CATEGORIES: '/products/categories/'
     },
     
-    // Waste Management endpoints
     WASTE: {
         REPORTS: '/waste/reports/',
         CATEGORIES: '/waste/categories/',
@@ -35,34 +30,29 @@ const config = {
         UPLOAD: '/waste/reports/upload/'
     },
 
-    // Leaderboard endpoints
     LEADERBOARD: {
         OVERALL: '/users/leaderboard/',
         WEEKLY: '/users/leaderboard/weekly/',
         IMPACT: '/users/leaderboard/impact/'
     },
 
-    // Storage keys
     STORAGE_KEYS: {
         AUTH_TOKEN: 'auth_token',
         REFRESH_TOKEN: 'refresh_token',
         USER_DATA: 'user_data'
     },
 
-    // Notification settings
     NOTIFICATIONS: {
         DURATION: 5000,
         POSITION: 'top-right'
     },
     
-    // Feature flags
     FEATURES: {
         ENABLE_NOTIFICATIONS: true,
         ENABLE_OFFLINE_MODE: true,
         ENABLE_DARK_MODE: true
     },
     
-    // Theme colors
     THEME: {
         PRIMARY: '#2c7a7b',
         SECONDARY: '#38a169',
@@ -71,7 +61,6 @@ const config = {
         TEXT_LIGHT: '#718096'
     },
     
-    // Validation rules
     VALIDATION: {
         PASSWORD_MIN_LENGTH: 8,
         USERNAME_MIN_LENGTH: 3,
@@ -82,12 +71,11 @@ const config = {
             DESCRIPTION_MIN_LENGTH: 10,
             MIN_PRICE: 0,
             MIN_STOCK: 0,
-            MAX_FILE_SIZE: 5 * 1024 * 1024, // 5MB
+            MAX_FILE_SIZE: 5 * 1024 * 1024, 
             ALLOWED_IMAGE_TYPES: ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/jpg'],
         }
     },
     
-    // Error messages
     ERRORS: {
         NETWORK: 'Network error. Please check your connection.',
         AUTH: {
@@ -101,7 +89,6 @@ const config = {
         },
     },
     
-    // Success messages
     SUCCESS: {
         REGISTRATION: 'Registration successful! Please login.',
         PAYMENT: 'Payment successful!',
@@ -109,7 +96,6 @@ const config = {
     },
 };
 
-// Freeze the config object to prevent modifications
 Object.freeze(config);
 
 export default config;
