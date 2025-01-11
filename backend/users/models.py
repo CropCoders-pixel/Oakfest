@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.db.models import Sum
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -38,8 +39,34 @@ class User(AbstractUser):
     farm_location = models.CharField(max_length=200, blank=True)
     farming_type = models.CharField(max_length=50, blank=True)
     
-    # Reward points
+    # Reward points and contributions
     reward_points = models.IntegerField(default=0)
+    total_waste_reports = models.IntegerField(default=0)
+    total_waste_collected = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+    
+    # Environmental impact metrics
+    carbon_saved = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0,
+        help_text='CO2 emissions saved in kg'
+    )
+    trees_saved = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0,
+        help_text='Equivalent number of trees saved'
+    )
+    water_saved = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0,
+        help_text='Water saved in liters'
+    )
     
     # Notification preferences
     email_notifications = models.BooleanField(default=True)
@@ -48,7 +75,7 @@ class User(AbstractUser):
     
     # Firebase cloud messaging token
     fcm_token = models.TextField(blank=True)
-    
+
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
@@ -57,20 +84,49 @@ class User(AbstractUser):
     def __str__(self):
         return self.email
 
-    class Meta:
-        verbose_name = _('user')
-        verbose_name_plural = _('users')
-        
     def get_full_name(self):
-        return f"{self.first_name} {self.last_name}"
-    
-    def add_reward_points(self, points):
-        self.reward_points += points
+        return f"{self.first_name} {self.last_name}".strip()
+
+    @property
+    def contribution_rank(self):
+        """Get user's rank based on reward points"""
+        return User.objects.filter(reward_points__gt=self.reward_points).count() + 1
+
+    @property
+    def contribution_percentile(self):
+        """Get user's percentile among all users"""
+        total_users = User.objects.count()
+        if total_users > 0:
+            return ((total_users - self.contribution_rank + 1) / total_users) * 100
+        return 0
+
+    def calculate_environmental_impact(self):
+        """Calculate environmental impact based on waste reports"""
+        # Impact factors (adjust these based on your research)
+        IMPACT_FACTORS = {
+            'cardboard': {'co2': 0.96, 'trees': 0.017, 'water': 3.8},
+            'glass': {'co2': 0.28, 'trees': 0, 'water': 2.5},
+            'metal': {'co2': 4.5, 'trees': 0, 'water': 8.0},
+            'paper': {'co2': 0.96, 'trees': 0.017, 'water': 3.8},
+            'plastic': {'co2': 1.5, 'trees': 0, 'water': 5.0},
+            'trash': {'co2': 0.1, 'trees': 0, 'water': 0.5}
+        }
+
+        # Get all approved waste reports
+        reports = self.waste_reports.filter(status='approved')
+        
+        # Reset impact metrics
+        self.carbon_saved = 0
+        self.trees_saved = 0
+        self.water_saved = 0
+        
+        # Calculate impact
+        for report in reports:
+            factors = IMPACT_FACTORS.get(report.waste_type, {'co2': 0, 'trees': 0, 'water': 0})
+            quantity = float(report.quantity)
+            
+            self.carbon_saved += quantity * factors['co2']
+            self.trees_saved += quantity * factors['trees']
+            self.water_saved += quantity * factors['water']
+        
         self.save()
-    
-    def deduct_reward_points(self, points):
-        if self.reward_points >= points:
-            self.reward_points -= points
-            self.save()
-            return True
-        return False

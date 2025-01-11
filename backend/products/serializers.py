@@ -54,6 +54,41 @@ class ProductSerializer(serializers.ModelSerializer):
             return obj.review_count
         return obj.reviews.count()
 
+    def validate(self, data):
+        # Ensure price is positive
+        if data.get('price', 0) <= 0:
+            raise serializers.ValidationError({'price': 'Price must be positive'})
+        
+        # Ensure stock is non-negative
+        if data.get('stock', 0) < 0:
+            raise serializers.ValidationError({'stock': 'Stock cannot be negative'})
+        
+        return data
+
+class ReviewSerializer(serializers.ModelSerializer):
+    user_email = serializers.EmailField(source='user.email', read_only=True)
+    user_name = serializers.CharField(source='user.get_full_name', read_only=True)
+    
+    class Meta:
+        model = Review
+        fields = ['id', 'user', 'user_email', 'user_name', 'product', 'rating', 'comment', 'created_at']
+        read_only_fields = ['user', 'user_email', 'user_name']
+
+    def validate_rating(self, value):
+        if not (1 <= value <= 5):
+            raise serializers.ValidationError('Rating must be between 1 and 5')
+        return value
+    
+    def validate(self, data):
+        # Prevent duplicate reviews
+        user = self.context['request'].user
+        product = data['product']
+        
+        if self.instance is None and Review.objects.filter(user=user, product=product).exists():
+            raise serializers.ValidationError('You have already reviewed this product')
+        
+        return data
+
 class WasteReportSerializer(serializers.ModelSerializer):
     user_email = serializers.EmailField(source='user.email', read_only=True)
     user_name = serializers.CharField(source='user.get_full_name', read_only=True)

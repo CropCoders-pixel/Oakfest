@@ -6,14 +6,15 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Avg, Count, Sum
 from django.utils import timezone
 from datetime import timedelta
-from .models import Category, Product, Review, WasteReport
+from .models import Category, Product, Review, WasteReport, ProductReview
 from .serializers import (
     CategorySerializer,
     ProductSerializer,
     ProductListSerializer,
     ReviewSerializer,
     WasteReportSerializer,
-    WasteStatisticsSerializer
+    WasteStatisticsSerializer,
+    ProductReviewSerializer
 )
 from users.permissions import IsFarmer
 
@@ -147,3 +148,120 @@ class WasteReportViewSet(viewsets.ModelViewSet):
         ).order_by('-total_points')[:10]
         
         return Response(list(top_users))
+
+class IsFarmer(permissions.BasePermission):
+    """Custom permission to only allow farmers to create/edit products"""
+    
+    def has_permission(self, request, view):
+        # Allow read operations for all users
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        
+        # Check if user is authenticated and is a farmer
+        return request.user.is_authenticated and request.user.user_type == 'farmer'
+    
+    def has_object_permission(self, request, view, obj):
+        # Allow read operations for all users
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        
+        # Only allow farmers to modify their own products
+        return obj.farmer == request.user
+
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.filter(is_active=True)
+    serializer_class = ProductSerializer
+    permission_classes = [IsFarmer]
+    parser_classes = (MultiPartParser, FormParser)
+    
+    def get_queryset(self):
+        queryset = Product.objects.filter(is_active=True)
+        
+        # Filter by category
+        category = self.request.query_params.get('category', None)
+        if category:
+            queryset = queryset.filter(category=category)
+        
+        # Filter by farmer
+        farmer_id = self.request.query_params.get('farmer', None)
+        if farmer_id:
+            queryset = queryset.filter(farmer_id=farmer_id)
+        
+        # Filter by price range
+        min_price = self.request.query_params.get('min_price', None)
+        max_price = self.request.query_params.get('max_price', None)
+        if min_price:
+            queryset = queryset.filter(price__gte=min_price)
+        if max_price:
+            queryset = queryset.filter(price__lte=max_price)
+        
+        return queryset
+    
+    def perform_create(self, serializer):
+        serializer.save(farmer=self.request.user)
+    
+    @action(detail=True, methods=['post'])
+    def manage_stock(self, request, pk=None):
+        product = self.get_object()
+        action = request.data.get('action')
+        quantity = int(request.data.get('quantity', 0))
+        
+        if action not in ['add', 'remove']:
+            return Response(
+                {'error': 'Invalid action. Use "add" or "remove"'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        if quantity <= 0:
+            return Response(
+                {'error': 'Quantity must be positive'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        if action == 'remove' and product.stock < quantity:
+            return Response(
+                {'error': 'Insufficient stock'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        if action == 'add':
+            product.stock += quantity
+        else:
+            product.stock -= quantity
+        
+        product.save()
+        serializer = self.get_serializer(product)
+        return Response(serializer.data)
+    
+    @action(detail=False, methods=['get'])
+    def my_products(self, request):
+        """Get all products for the current farmer"""
+        if request.user.user_type != 'farmer':
+            return Response(
+                {'error': 'Only farmers can access this endpoint'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        products = Product.objects.filter(farmer=request.user, is_active=True)
+        serializer = self.get_serializer(products, many=True)
+        return Response(serializer.data)
+    
+    def destroy(self, request, *args, **kwargs):
+        """Soft delete a product by setting is_active to False"""
+        product = self.get_object()
+        product.is_active = False
+        product.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class ProductReviewViewSet(viewsets.ModelViewSet):
+    serializer_class = ProductReviewSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    
+    def get_queryset(self):
+        return ProductReview.objects.filter(product_id=self.kwargs['product_pk'])
+    
+    def perform_create(self, serializer):
+        serializer.save(
+            user=self.request.user,
+            product_id=self.kwargs['product_pk']
+        )

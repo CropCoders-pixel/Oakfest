@@ -16,10 +16,12 @@ class WasteCategory(models.Model):
 
 class WasteReport(models.Model):
     class WasteType(models.TextChoices):
-        ORGANIC = 'organic', _('Organic Waste')
-        PACKAGING = 'packaging', _('Packaging Waste')
-        FOOD = 'food', _('Food Waste')
-        OTHER = 'other', _('Other')
+        CARDBOARD = 'cardboard', _('Cardboard')
+        GLASS = 'glass', _('Glass')
+        METAL = 'metal', _('Metal')
+        PAPER = 'paper', _('Paper')
+        PLASTIC = 'plastic', _('Plastic')
+        TRASH = 'trash', _('Trash')
     
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -27,7 +29,11 @@ class WasteReport(models.Model):
         related_name='waste_reports'
     )
     category = models.ForeignKey(WasteCategory, on_delete=models.CASCADE)
-    waste_type = models.CharField(max_length=10, choices=WasteType.choices)
+    waste_type = models.CharField(
+        max_length=10,
+        choices=WasteType.choices,
+        help_text=_('Type of waste material')
+    )
     quantity = models.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -35,7 +41,10 @@ class WasteReport(models.Model):
     )
     description = models.TextField(blank=True)
     location = models.CharField(max_length=200)
-    image = models.ImageField(upload_to='waste_images/', null=True, blank=True)
+    image = models.ImageField(
+        upload_to='waste_images/',
+        help_text=_('Image must clearly show the waste type')
+    )
     points_awarded = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(
@@ -53,18 +62,24 @@ class WasteReport(models.Model):
         ordering = ['-created_at']
     
     def __str__(self):
-        return f"{self.user.email}'s {self.waste_type} waste report"
+        return f"{self.user.email}'s {self.get_waste_type_display()} waste report"
     
     def save(self, *args, **kwargs):
         if not self.pk:  # Only calculate points for new reports
-            points = int(self.quantity * self.category.points_per_unit)
-            if self.waste_type == self.WasteType.ORGANIC:
-                points *= 2  # Double points for organic waste
-            self.points_awarded = points
+            # Base points based on waste type
+            points_map = {
+                'cardboard': 10,
+                'glass': 15,
+                'metal': 20,
+                'paper': 10,
+                'plastic': 15,
+                'trash': 5
+            }
+            self.points_awarded = points_map.get(self.waste_type, 0)
             
             # Update user's reward points if report is approved
             if self.status == 'approved':
-                self.user.reward_points += points
+                self.user.reward_points += self.points_awarded
                 self.user.save()
         super().save(*args, **kwargs)
 

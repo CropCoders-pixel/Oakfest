@@ -17,3 +17,4 @@ django-redis
 whitenoise
 gunicorn
 psycopg2-binary
+tensorflow
