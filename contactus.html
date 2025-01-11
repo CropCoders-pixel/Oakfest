@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .form-group textarea {
+            resize: vertical;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .btn:hover {
+            background-color: #388e3c;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Contact Us</h1>
+        <form id="contactForm">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" placeholder="Enter your full name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Your Email Address</label>
+                <input type="email" id="email" placeholder="Enter your email address" required>
+            </div>
+            <div class="form-group">
+                <label for="subject">Subject</label>
+                <input type="text" id="subject" placeholder="Enter the subject" required>
+            </div>
+            <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" rows="5" placeholder="Enter your message" required></textarea>
+            </div>
+            <button type="button" class="btn" id="sendGmail">Send via Gmail</button>
+            <button type="button" class="btn" id="sendOutlook">Send via Outlook</button>
+        </form>
+        <div class="footer">
+            <p>We will get back to you within 24-48 hours.</p>
+        </div>
+    </div>
+
+    <script>
+        // Function to generate email links for Gmail or Outlook
+        function sendEmail(service) {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+
+            // Encode the email content
+            const encodedSubject = encodeURIComponent(subject);
+            const encodedBody = encodeURIComponent(
+                `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
+            );
+
+            // Generate the URL for Gmail or Outlook
+            let url = '';
+            if (service === 'gmail') {
+                url = `https://mail.google.com/mail/?view=cm&fs=1&to=cropcodersoakfest@gmail.com
+&su=${encodedSubject}&body=${encodedBody}`;
+            } else if (service === 'outlook') {
+                url = `https://outlook.live.com/owa/?path=/mail/action/compose&to=cropcodersoakfest@gmail.com
+&subject=${encodedSubject}&body=${encodedBody}`;
+            }
+
+            // Open the URL in a new tab
+            window.open(url, '_blank');
+        }
+
+        // Event listeners for Gmail and Outlook buttons
+        document.getElementById('sendGmail').addEventListener('click', () => {
+            sendEmail('gmail');
+        });
+
+        document.getElementById('sendOutlook').addEventListener('click', () => {
+            sendEmail('outlook');
+        });
+        document.getElementById('sendGmail').addEventListener('click', () => {
+            sendEmail('mailto:cropcodersoakfest@gmail.com');
+        });
+
+        document.getElementById('sendOutlook').addEventListener('click', () => {
+            sendEmail('mailto:cropcodersoakfest@gmail.com');
+
+        });
+    </script>
+</body>
+</html>
