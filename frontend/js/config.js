@@ -83,7 +83,7 @@ const config = {
             MIN_PRICE: 0,
             MIN_STOCK: 0,
             MAX_FILE_SIZE: 5 * 1024 * 1024, // 5MB
-            ALLOWED_IMAGE_TYPES: ['image/jpeg', 'image/png', 'image/webp']
+            ALLOWED_IMAGE_TYPES: ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/jpg'],
         }
     },
     
