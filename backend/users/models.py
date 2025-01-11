@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.db.models import Sum
+from django.core.validators import RegexValidator
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -28,7 +29,16 @@ class User(AbstractUser):
 
     email = models.EmailField(_('email address'), unique=True)
     user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES, default='consumer')
-    phone = models.CharField(max_length=15, blank=True)
+    phone = models.CharField(
+        max_length=15,
+        blank=True,
+        validators=[
+            RegexValidator(
+                regex=r'^\+?1?\d{9,15}$',
+                message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed."
+            )
+        ]
+    )
     address = models.TextField(blank=True)
     profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
     date_of_birth = models.DateField(null=True, blank=True)
@@ -80,6 +90,13 @@ class User(AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['email']),
+            models.Index(fields=['user_type']),
+            models.Index(fields=['reward_points']),
+        ]
 
     def __str__(self):
         return self.email

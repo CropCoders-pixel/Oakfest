@@ -1,4 +1,8 @@
 // UI Service for handling UI components and interactions
+import { ApiService } from './api.js';
+const api = new ApiService();
+
+
 class UiService {
     constructor() {
         this.currentPage = 'home';
@@ -103,6 +107,7 @@ class UiService {
             document.getElementById('priceRange').addEventListener('input', this.handleProductFilter.bind(this));
             document.getElementById('sortBy').addEventListener('change', this.handleProductFilter.bind(this));
         } catch (error) {
+            console.error('Error loading products:', error);
             this.showError('Failed to load products');
         }
     }

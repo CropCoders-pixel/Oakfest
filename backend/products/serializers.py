@@ -1,113 +1,33 @@
 from rest_framework import serializers
-from django.db import models
-from .models import Category, Product, Review, WasteReport
+from django.db.models import Avg
 from users.serializers import UserSerializer
-
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = '__all__'
-
-class ReviewSerializer(serializers.ModelSerializer):
-    user_email = serializers.EmailField(source='user.email', read_only=True)
-    user_name = serializers.CharField(source='user.get_full_name', read_only=True)
-    
-    class Meta:
-        model = Review
-        fields = ['id', 'user', 'user_email', 'user_name', 'product', 'rating', 'comment', 'created_at']
-        read_only_fields = ['user', 'user_email', 'user_name']
-
-class ProductListSerializer(serializers.ModelSerializer):
-    category_name = serializers.CharField(source='category.name', read_only=True)
-    farmer_name = serializers.CharField(source='farmer.get_full_name', read_only=True)
-    average_rating = serializers.FloatField(read_only=True)
-    review_count = serializers.IntegerField(read_only=True)
-    
-    class Meta:
-        model = Product
-        fields = ['id', 'name', 'price', 'unit', 'category', 'category_name', 
-                 'farmer', 'farmer_name', 'is_organic', 'is_featured', 'image',
-                 'average_rating', 'review_count']
+from .models import Product, ProductReview
 
 class ProductSerializer(serializers.ModelSerializer):
-    reviews = ReviewSerializer(many=True, read_only=True)
-    category_name = serializers.CharField(source='category.name', read_only=True)
-    farmer_name = serializers.CharField(source='farmer.get_full_name', read_only=True)
-    average_rating = serializers.SerializerMethodField()
-    review_count = serializers.SerializerMethodField()
-    
+    farmer = UserSerializer(read_only=True)
+    average_rating = serializers.FloatField(read_only=True)
+    review_count = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = Product
-        fields = ['id', 'name', 'description', 'price', 'unit', 'stock',
-                 'category', 'category_name', 'farmer', 'farmer_name',
-                 'is_organic', 'is_featured', 'image', 'created_at',
-                 'updated_at', 'reviews', 'average_rating', 'review_count']
-        read_only_fields = ['farmer', 'farmer_name', 'average_rating', 'review_count']
-    
-    def get_average_rating(self, obj):
-        if hasattr(obj, 'average_rating'):
-            return obj.average_rating
-        return obj.reviews.aggregate(models.Avg('rating'))['rating__avg'] or 0
-    
-    def get_review_count(self, obj):
-        if hasattr(obj, 'review_count'):
-            return obj.review_count
-        return obj.reviews.count()
+        fields = [
+            'id', 'name', 'description', 'price', 'stock', 
+            'unit', 'category', 'image', 'farmer',
+            'average_rating', 'review_count', 'created_at'
+        ]
+        read_only_fields = ['farmer', 'average_rating', 'review_count']
 
-    def validate(self, data):
-        # Ensure price is positive
-        if data.get('price', 0) <= 0:
-            raise serializers.ValidationError({'price': 'Price must be positive'})
-        
-        # Ensure stock is non-negative
-        if data.get('stock', 0) < 0:
-            raise serializers.ValidationError({'stock': 'Stock cannot be negative'})
-        
-        return data
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        reviews = instance.reviews.all()
+        representation['average_rating'] = reviews.aggregate(avg_rating=Avg('rating'))['avg_rating'] or 0
+        representation['review_count'] = reviews.count()
+        return representation
 
-class ReviewSerializer(serializers.ModelSerializer):
-    user_email = serializers.EmailField(source='user.email', read_only=True)
-    user_name = serializers.CharField(source='user.get_full_name', read_only=True)
-    
+class ProductReviewSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
     class Meta:
-        model = Review
-        fields = ['id', 'user', 'user_email', 'user_name', 'product', 'rating', 'comment', 'created_at']
-        read_only_fields = ['user', 'user_email', 'user_name']
-
-    def validate_rating(self, value):
-        if not (1 <= value <= 5):
-            raise serializers.ValidationError('Rating must be between 1 and 5')
-        return value
-    
-    def validate(self, data):
-        # Prevent duplicate reviews
-        user = self.context['request'].user
-        product = data['product']
-        
-        if self.instance is None and Review.objects.filter(user=user, product=product).exists():
-            raise serializers.ValidationError('You have already reviewed this product')
-        
-        return data
-
-class WasteReportSerializer(serializers.ModelSerializer):
-    user_email = serializers.EmailField(source='user.email', read_only=True)
-    user_name = serializers.CharField(source='user.get_full_name', read_only=True)
-    
-    class Meta:
-        model = WasteReport
-        fields = ['id', 'user', 'user_email', 'user_name', 'waste_type', 
-                 'quantity', 'description', 'image', 'created_at', 
-                 'points_awarded']
-        read_only_fields = ['user', 'user_email', 'user_name', 'points_awarded']
-
-class WasteStatisticsSerializer(serializers.Serializer):
-    total_waste = serializers.DecimalField(max_digits=10, decimal_places=2)
-    total_points = serializers.IntegerField()
-    waste_by_type = serializers.DictField(
-        child=serializers.DecimalField(max_digits=10, decimal_places=2)
-    )
-    monthly_stats = serializers.ListField(
-        child=serializers.DictField(
-            child=serializers.DecimalField(max_digits=10, decimal_places=2)
-        )
-    )
+        model = ProductReview
+        fields = ['id', 'user', 'product', 'rating', 'comment', 'created_at']
+        read_only_fields = ['user', 'product']

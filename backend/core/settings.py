@@ -30,7 +30,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'users',
-    'waste',
     'products',
     'cart',
     'orders',

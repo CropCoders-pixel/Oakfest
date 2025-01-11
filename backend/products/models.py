@@ -36,7 +36,7 @@ class Product(models.Model):
     unit = models.CharField(max_length=2, choices=UNIT_CHOICES)
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
     stock = models.PositiveIntegerField(default=0)
-    image = models.ImageField(upload_to='products/')
+    image = models.ImageField(upload_to='products/', null=True, blank=True)
     farmer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -47,6 +47,12 @@ class Product(models.Model):
     
     class Meta:
         ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['-created_at']),
+            models.Index(fields=['category']),
+            models.Index(fields=['farmer']),
+            models.Index(fields=['is_active']),
+        ]
 
 class ProductReview(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
