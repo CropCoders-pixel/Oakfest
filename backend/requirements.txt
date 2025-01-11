@@ -9,6 +9,11 @@ razorpay
 twilio
 firebase-admin
 Pillow
-python-magic
-gunicorn
+channels
+channels-redis
+redis
+phonenumbers
+django-redis
 whitenoise
+gunicorn
+psycopg2-binary
