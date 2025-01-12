@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css">
+    <title>CropCoders</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #126442af;
+        }
+
+        .logo a {
+            color: white;
+            font-size: 30px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .menu ul {
+            display: flex;
+            list-style-type: none;
+        }
+
+        .menu ul li a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+        }
+
+        .menu ul li a:hover {
+            color: rgba(0, 0, 0, 0.274);
+        }
+
+        .search {
+            display: flex;
+            align-items: center;
+        }
+
+        #input {
+            height: 30px;
+            width: 300px;
+            padding: 5px;
+            border: none;
+        }
+
+        .img-slider {
+            display: flex;
+            overflow: hidden;
+            width: 100%;
+            height: 60vh;
+        }
+
+        .img-slider img {
+            width: 100%;
+            height: auto;
+        }
+
+        .section2 .container {
+            display: flex;
+            background-image: url('https://static.vecteezy.com/system/resources/thumbnails/050/680/099/small_2x/lush-green-leaves-covering-the-ground-in-a-forest-setting-during-daytime-with-sunlight-illuminating-their-textures-photo.jpg');
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px;
+        }
+
+        .section2 .container .items {
+            margin: 10px;
+            width: 200px;
+            background-color: rgba(255, 255, 255, 0.664);
+            border: 2px solid black;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .items img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .name {
+            background-color: rgba(255, 255, 255, 0.726);
+            text-align: center;
+            padding: 5px;
+            color: rgb(0, 0, 0);
+            font-weight: bold;
+        }
+
+        .price {
+            color: rgb(253, 0, 0);
+            padding: 5px;
+            font-weight: bold;
+        }
+
+        .info {
+            padding: 5px;
+            color: rgb(0, 0, 0);
+        }
+
+        footer {
+            background-color: black;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .social-media a {
+            color: white;
+            margin: 10px;
+            font-size: 24px;
+        }
+
+        .social-media a:hover {
+            color: rgb(243, 168, 7);
+        }
+
+        @media (max-width: 768px) {
+            .menu ul {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .img-slider {
+                height: 40vh;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo"><a href="#">CropCoders</a></div>
+
+    <div class="menu">
+        <ul>
+            <li><a href="home.html#home">HOME</a></li>
+        </ul>
+    </div>
+</header>
+
+<section id="section2" class="section2">
+    <div class="container">
+        <div class="items">
+            <img src="images.jpeg" alt="Fertilizer">
+            <div class="name">Fertilizer</div>
+            <div class="price">Rs 50</div>
+            <div class="price"><a href="https://chat.whatsapp.com/GIsEY7yqWDj0q8om8NyAe4">Order Now</a></div>
+            <div class="info">1kg<br>Made of cow dung</div>
+        </div>
+
+        <div class="items">
+            <img src="images (1).jpeg" alt="compost">
+            <div class="name">compost</div>
+            <div class="price">Rs 250</div>
+            <div class="price"><a href="https://chat.whatsapp.com/GIsEY7yqWDj0q8om8NyAe4">Order Now</a></div>
+            <div class="info">2kg<br>made of plant waste</div>
+        </div>
+    </div>
+</section>
+
+</html>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Company Footer</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Arial", sans-serif;
+      }
+
+      
+      .footer {
+        background-color: #126442d8;
+        color: #fff;
+        padding: 50px 0;
+        text-align: center;
+      }
+
+      .footer-container {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+      }
+
+      .footer-info,
+      .footer-social {
+        flex: 1;
+        min-width: 250px;
+        margin: 10px;
+      }
+
+      .footer-info h3,
+      .footer-social h3 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+      }
+
+      .footer-info ul,
+      .footer-social ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .footer-info li,
+      .footer-social li {
+        font-size: 1rem;
+        margin-bottom: 10px;
+      }
+
+      .footer-info li strong {
+        font-weight: bold;
+      }
+
+      .footer-social a {
+        text-decoration: none;
+        color: #fff;
+        transition: 0.3s;
+      }
+
+      .footer-social a:hover {
+        color: #47b2e4;
+      }
+
+      .footer-bottom {
+        background-color: #0f3b30;
+        padding: 15px;
+        margin-top: 10px;
+      }
+
+      .footer-bottom p {
+        margin: 0;
+        font-size: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-info">
+          <h3>Company Info</h3>
+          <ul>
+            <li><strong>Address:</strong> EsHSR</li>
+            <li><strong>Phone:</strong> +1 234 567 890</li>
+            <li><strong>Email:</strong> cropCoders@gmail.com</li>
+            <li><strong>Website:</strong> Example.com</li>
+          </ul>
+        </div>
+        <div class="footer-social">
+          <h3>Follow Us</h3>
+          <ul>
+            <li><a href="#">Facebook</a></li>
+            <li><a href="#">Twitter</a></li>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">LinkedIn</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 . All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
+</html>
+
+
+</body>
+</html>
