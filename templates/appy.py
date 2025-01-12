@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, jsonify, session
 import sqlite3
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key' 
+app.secret_key = 'mera_secret_key' 
 
 def init_db():
     with sqlite3.connect("waste_management.db") as conn:
